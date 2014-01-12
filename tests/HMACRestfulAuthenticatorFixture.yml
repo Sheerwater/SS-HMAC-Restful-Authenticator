@@ -1,0 +1,8 @@
+Sheerwater\HMACRestfulAuthenticator\Models\ApiKeyPair:
+  1:
+    Title: 'test'
+    Enabled: true
+    Member: =>Member.1
+Member:
+  1:
+    Email: 'test'
