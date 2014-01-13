@@ -1,0 +1,17 @@
+{
+    "name":        "sheerwater/ss-hmac-restful-authenticator",
+    "description": "Authenticator for SilverStripe restful modules that implements the Amazon S3 HMAC pattern.",
+    "type":        "silverstripe-module",
+    "keywords":    ["silverstripe", "hmac", "rest"],
+    "license":     "BSD-3-Clause",
+    "authors":     [
+        {
+            "name":  "Nik Rolls",
+            "email": "nik@rolls.cc"
+        }
+    ],
+    "require":     {
+        "php":                    ">=5.4.0",
+        "silverstripe/framework": "~3.1"
+    }
+}
