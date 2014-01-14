@@ -345,7 +345,12 @@ class TestController extends Controller
     {
         $member = HMACRestfulAuthenticator::authenticate();
         if (!($member and $member->exists())) {
-            $this->httpError(403, 'Authentication failed.');
+            $this->httpError(401, 'Authentication failed.');
+        } else {
+            if ($this->request->isPOST()) {
+                // Simulate 'Created'
+                $this->response->setStatusCode(201);
+            }
         }
     }
 }

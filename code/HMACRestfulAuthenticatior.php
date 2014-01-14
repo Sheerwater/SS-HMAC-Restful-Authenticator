@@ -223,6 +223,6 @@ class HMACRestfulAuthenticator
         // Sign the string an compare it to the provided hash
         $signedString = hash_hmac('sha1', $strToSign, $secret);
 
-        return $signedString === $hashToCompare || $signedString === base64_decode($hashToCompare);
+        return $signedString === $hashToCompare || $signedString === bin2hex(base64_decode($hashToCompare));
     }
 }
