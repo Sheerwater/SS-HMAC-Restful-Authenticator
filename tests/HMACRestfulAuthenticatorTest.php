@@ -4,10 +4,10 @@ namespace Sheerwater\HMACRestfulAuthenticator\Tests;
 
 use Sheerwater\HMACRestfulAuthenticator\Models\ApiKeyPair;
 use Sheerwater\HMACRestfulAuthenticator\HMACRestfulAuthenticator;
-use SapphireTest, Director, SS_HTTPRequest, DataObject, TestOnly, Member;
+use Config, Controller, Director, SS_HTTPRequest, DataObject, TestOnly, Member;
 use ReflectionMethod;
 
-class HMACRestfulAuthenticatorTest extends SapphireTest
+class HMACRestfulAuthenticatorTest extends \SapphireTest
 {
     protected $extraDataObjects = [
         'Sheerwater\HMACRestfulAuthenticator\Tests\TestApiObject'
@@ -23,6 +23,10 @@ class HMACRestfulAuthenticatorTest extends SapphireTest
         // Reset the API name in case the current site configuration has changed it
         $this->oldApiName = HMACRestfulAuthenticator::getApiName();
         HMACRestfulAuthenticator::setApiName('Api');
+
+        Config::inst()->update('Director', 'rules', [
+            'TestController' => 'Sheerwater\HMACRestfulAuthenticator\Tests\TestController'
+        ]);
     }
 
     public function tearDownOnce()
@@ -64,10 +68,10 @@ class HMACRestfulAuthenticatorTest extends SapphireTest
             $getDate . "\n" .
             'x-api-user: 54' . "\n" .
             'x-api-device: 23' . "\n" .
-            'api/v1/TestApiObject';
+            'TestController';
         $getRequestSign = hash_hmac('sha1', $getRequestSTS, $key->Secret);
         $getResponse    = Director::test(
-            'api/v1/TestApiObject',
+            'TestController',
             null, null,
             'GET',
             null,
@@ -91,10 +95,10 @@ class HMACRestfulAuthenticatorTest extends SapphireTest
             'x-api-user: 54' . "\n" .
             'x-api-device: 23' . "\n" .
             'x-api-date: ' . $postDate . "\n" .
-            'api/v1/TestApiObject';
+            'TestController';
         $postRequestSign = hash_hmac('sha1', $postRequestSTS, $key->Secret);
         $postResponse    = Director::test(
-            'api/v1/TestApiObject',
+            'TestController',
             null, null,
             'POST',
             $postContent,
@@ -112,7 +116,7 @@ class HMACRestfulAuthenticatorTest extends SapphireTest
 
         // Invalid POST request (body does not match the hash provided, eg the payload has been tampered with)
         $postResponse = Director::test(
-            'api/v1/TestApiObject',
+            'TestController',
             null, null,
             'POST',
             $postContent . ' ',
@@ -332,5 +336,16 @@ class TestApiObject extends DataObject implements TestOnly
     public function canCreate($member = null)
     {
         return Member::currentUserID() > 0;
+    }
+}
+
+class TestController extends Controller
+{
+    public function index()
+    {
+        $member = HMACRestfulAuthenticator::authenticate();
+        if (!($member and $member->exists())) {
+            $this->httpError(403, 'Authentication failed.');
+        }
     }
 }

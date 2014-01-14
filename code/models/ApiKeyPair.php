@@ -2,7 +2,7 @@
 
 namespace Sheerwater\HMACRestfulAuthenticator\Models;
 
-use DataObject, Member;
+use Member;
 
 /**
  * Class ApiKeyPair
@@ -14,8 +14,10 @@ use DataObject, Member;
  * @property bool   Enabled
  * @method Member Member
  */
-class ApiKeyPair extends DataObject
+class ApiKeyPair extends \DataObject
 {
+    private static $singular_name = 'API Keypair';
+    private static $plural_name = 'keypairs';
 
     private static $db = [
         'Title'   => 'Varchar',

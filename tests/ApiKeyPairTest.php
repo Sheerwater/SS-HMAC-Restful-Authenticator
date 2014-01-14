@@ -3,9 +3,8 @@
 namespace Sheerwater\HMACRestfulAuthenticator\Tests;
 
 use Sheerwater\HMACRestfulAuthenticator\Models\ApiKeyPair;
-use SapphireTest;
 
-class ApiKeyPairTest extends SapphireTest
+class ApiKeyPairTest extends \SapphireTest
 {
 
     public function testGetCMSFields()
