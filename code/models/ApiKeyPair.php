@@ -2,7 +2,7 @@
 
 namespace Sheerwater\HMACRestfulAuthenticator\Models;
 
-use Member;
+use Member, RandomGenerator;
 
 /**
  * Class ApiKeyPair
@@ -71,7 +71,8 @@ class ApiKeyPair extends \DataObject
      */
     private function generateKey($type = 'md5')
     {
-        return strtolower(hash($type, microtime()));
+        $generator = new RandomGenerator();
+        return strtolower($generator->randomToken($type));
     }
 
     public function onBeforeWrite()
